@@ -6,14 +6,17 @@ import 'nprogress/nprogress.css'
 
 // 创建实例对象
 const request = axios.create({
-  baseURL:'http://127.0.0.1:8888/api/private/v1/'
+  baseURL:'/api/private/v1/'
 })
 
 // 请求拦截器
 request.interceptors.request.use((config) =>{
+  // 为请求头 添加token验证Authoritarian字段
+  config.headers.Authorization = sessionStorage.getItem('token')
   // 开启进度条
   nprogress.start()
-
+  
+  
   // 返回
   return config
 })

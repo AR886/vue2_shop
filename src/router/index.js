@@ -18,7 +18,7 @@ router.beforeEach((to,from,next)=>{
     next()
   }else{
     // 获取token
-    const token = sessionStorage.getItem('TOKEN')
+    const token = sessionStorage.getItem('token')
     if(token){
       next()
     }else{

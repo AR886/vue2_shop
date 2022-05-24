@@ -63,9 +63,9 @@ export default {
             this.$message({ type: 'success', message: '登录成功' })
             // 获取用户的token 进行会话存储
             const token = this.$store.state.Login.info.token
-            sessionStorage.setItem('TOKEN', token)
+            sessionStorage.setItem('token', token)
             // 路由跳转
-            this.$router.push('/home')
+            this.$router.push('/users/manage')
           } else {
             this.$message({ type: 'error', message: '登录失败' })
           }

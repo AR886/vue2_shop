@@ -10,5 +10,14 @@ module.exports = {
         '@': path.resolve(__dirname, './src')
       }
     }
+  },
+  // 代理跨域
+  devServer: {
+    proxy: {
+      '/api/private/v1/': {
+        target: 'http://127.0.0.1:8888'
+        // pathRewrite:{'^api':''}
+      }
+    }
   }
 }
