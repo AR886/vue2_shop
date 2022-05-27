@@ -38,7 +38,7 @@
               <el-button type="danger" size="small" icon="el-icon-delete" @click="open(row.id)"></el-button>
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="分配角色" placement="top" :enterable="false">
-              <el-button type="warning" size="small" icon="el-icon-setting"></el-button>
+              <el-button type="warning" size="small" icon="el-icon-setting" @click="setRole(row)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -87,6 +87,23 @@
         <span slot="footer">
           <el-button @click="updateDialog = false">取消</el-button>
           <el-button type="primary" @click="updateUserInfo">确定</el-button>
+        </span>
+      </el-dialog>
+
+      <!-- 分配角色对话框 -->
+      <el-dialog title="分配角色" :visible.sync="setRoleDialog" width="50%" @close="closeSetDialog">
+        <el-form ref="setRoleRef" :model="setRoleInfo" label-width="100px" :inline="false" size="normal">
+          <el-form-item label="当前用户名" size="normal">{{ setRoleInfo.username }} </el-form-item>
+          <el-form-item label="当前角色名" size="normal">{{ setRoleInfo.role_name }} </el-form-item>
+          <el-form-item label="分配新角色">
+            <el-select v-model="selectRoleId" placeholder="请选择">
+              <el-option :label="role.roleName" :value="role.id" v-for="role in rolesList" :key="role.id"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <span slot="footer">
+          <el-button @click="setRoleDialog = false">取消</el-button>
+          <el-button type="primary" @click="saveUserRole">确定</el-button>
         </span>
       </el-dialog>
     </el-card>
@@ -152,13 +169,24 @@ export default {
       // 显示隐藏修改用户对话框
       updateDialog: false,
       // 收集修改用户数据
-      updateForm: {}
+      updateForm: {},
+      // 显示隐藏分配角色对话框
+      setRoleDialog: false,
+      // 收集分配角色信息
+      setRoleInfo: {},
+      // 分配角色 选中的ID
+      selectRoleId: ''
     }
   },
   mounted() {
     this.getUserList()
+    this.getRolesList()
   },
   methods: {
+    // 获取角色列表
+    getRolesList() {
+      this.$store.dispatch('getRolesList')
+    },
     // 获取用户列表
     getUserList() {
       const data = {
@@ -248,44 +276,68 @@ export default {
       })
     },
     // 用户列表 删除按钮 弹框回调
-    async open(id) {
-      const result = await this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+    open(id) {
+      this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).catch((err) => err)
-      if (result === 'confirm') {
-        const removeResult = await this.$store.dispatch('deleteUser', id)
-        if (removeResult === 'ok') {
-          this.$message({ type: 'success', message: '删除成功!' })
-          this.getUserList(this.$store.state.Home.userList.users.length <= 1 ? this.page - 1 : this.page)
-        }
-      }
-      if (result === 'cancel') {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
+      }) // .catch((err) => err)
+        // if (result === 'confirm') {
+        //   const removeResult = await this.$store.dispatch('deleteUser', id)
+        //   if (removeResult === 'ok') {
+        //     this.$message({ type: 'success', message: '删除成功!' })
+        //     this.getUserList()
+        //   }
+        // }
+        // if (result === 'cancel') {
+        //   this.$message({
+        //     type: 'info',
+        //     message: '已取消删除'
+        //   })
+        // }
+        .then(async () => {
+          const result = await this.$store.dispatch('deleteUser', id)
+          if (result === 'ok') {
+            this.$message({ type: 'success', message: '删除成功!' })
+            // 判断当前页用户列表至少有一条
+            this.getUserList()
+          }
         })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+    },
+    // 打开分配角色对话框
+    setRole(row) {
+      this.setRoleInfo = { ...row }
+      this.setRoleDialog = true
+    },
+    // 分配用户角色
+    async saveUserRole() {
+      const data = { id: this.setRoleInfo.id, rid: this.selectRoleId }
+      if (!this.selectRoleId) {
+        return this.$message({ type: 'error', message: '请选择用户角色' })
       }
-      // .then(async () => {
-      //   const result = await this.$store.dispatch('deleteUser', id)
-      //   if (result === 'ok') {
-      //     this.$message({ type: 'success', message: '删除成功!' })
-      //     // 判断当前页用户列表至少有一条
-      //     this.getUserList(this.userList.users.length < 1 ? this.page - 1 : this.page)
-      //   }
-      // })
-      // .catch(() => {
-      //   this.$message({
-      //     type: 'info',
-      //     message: '已取消删除'
-      //   })
-      // })
+      const result = await this.$store.dispatch('setUserRole', data)
+      if (result === 'ok') {
+        this.getUserList()
+        this.$message({ type: 'success', message: '更新用户角色成功' })
+        this.setRoleDialog = false
+      }
+    },
+    // 分配角色对话框关闭 回调
+    closeSetDialog() {
+      this.setRoleInfo = {}
+      this.selectRoleId = ''
     }
   },
   computed: {
     ...mapState({
-      userList: (state) => state.Home.userList
+      userList: (state) => state.Home.userList,
+      rolesList: (state) => state.Roles.rolesList
     })
   }
 }

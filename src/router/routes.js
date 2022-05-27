@@ -14,6 +14,17 @@ const routes = [
       // 用户列表
       { path: 'users', component: () => import('@/views/home/userList') }
     ]
+  },
+  // 权限管理模块
+  {
+    path: '/rights',
+    component: () => import('@/views/home'),
+    children: [
+      // 角色列表
+      { path: 'roles', component: () => import('@/views/power/roleList') },
+      // 权限列表
+      { path: 'rights', component: () => import('@/views/power/powerList') }
+    ]
   }
 ]
 

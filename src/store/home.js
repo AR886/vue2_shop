@@ -1,4 +1,4 @@
-import { reqLeftMenus, reqUserList, reqUpdateUserState, reqAddUser, reqUpdateUser, reqDeleteUser } from '@/api'
+import { reqLeftMenus, reqUserList, reqUpdateUserState, reqAddUser, reqUpdateUser, reqDeleteUser, reqSetUserRole } from '@/api'
 
 const state = {
   leftMenus: [],
@@ -52,6 +52,14 @@ const actions = {
   // 删除单个用户
   async deleteUser({ commit }, id) {
     const { data: res } = await reqDeleteUser(id)
+    if (res.meta.status === 200) {
+      return 'ok'
+    }
+  },
+  // 分配用户角色
+  async setUserRole({ commit }, data) {
+    const { data: res } = await reqSetUserRole(data)
+    console.log(res)
     if (res.meta.status === 200) {
       return 'ok'
     }

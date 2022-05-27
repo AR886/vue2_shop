@@ -4,7 +4,7 @@
     <el-header>
       <div class="header_title">
         <img src="@/assets/yunnan.gif" alt="" />
-        <router-link to="/manage"><span class="title">电商系统后台管理</span></router-link>
+        <router-link to="/users/manage"><span class="title">电商系统后台管理</span></router-link>
       </div>
       <el-button type="info" size="default" @click="logout">退出</el-button>
     </el-header>
