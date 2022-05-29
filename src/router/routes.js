@@ -25,6 +25,15 @@ const routes = [
       // 权限列表
       { path: 'rights', component: () => import('@/views/power/powerList') }
     ]
+  },
+  // 商品管理模块
+  {
+    path: '/goods',
+    component: () => import('@/views/home'),
+    children: [
+      // 商品分类
+      { path: 'categories', component: () => import('@/views/goods/categories') }
+    ]
   }
 ]
 

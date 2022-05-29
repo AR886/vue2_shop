@@ -11,6 +11,7 @@ import store from './store'
 import Crumbs from '@/components/crumbs.vue'
 // 引入阿里图标库
 import '@/assets/iconfont/iconfont.css'
+
 Vue.component(Crumbs.name, Crumbs)
 Vue.config.productionTip = false
 

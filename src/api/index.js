@@ -45,3 +45,15 @@ export const reqSubmitPower = ({ roleId, rids }) => request({ url: `roles/${role
 
 //  分配用户角色  users/:id/role  put
 export const reqSetUserRole = ({ id, rid }) => request({ url: `users/${id}/role`, method: 'put', data: { rid } })
+
+//  商品分类数据列表  categories  get
+export const reqCategoriesList = (queryInfo) => request({ url: 'categories', method: 'get', params: queryInfo })
+
+// 添加分类  categories post
+export const reqAddCategories = (data) => request({ url: 'categories', method: 'post', data })
+
+// 编辑提交分类 categories/:id put
+export const reqUpdateCategories = ({ id, cat_name }) => request({ url: `categories/${id}`, method: 'put', data: { cat_name } })
+
+//  删除分类  categories/:id  delete
+export const reqDeleteCategories = (id) => request({ url: `categories/${id}`, method: 'delete' })
