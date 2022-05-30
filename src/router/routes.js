@@ -32,7 +32,9 @@ const routes = [
     component: () => import('@/views/home'),
     children: [
       // 商品分类
-      { path: 'categories', component: () => import('@/views/goods/categories') }
+      { path: 'categories', component: () => import('@/views/goods/categories') },
+      // 参数分类
+      { path: 'params', component: () => import('@/views/goods/params') }
     ]
   }
 ]

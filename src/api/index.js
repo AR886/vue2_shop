@@ -57,3 +57,15 @@ export const reqUpdateCategories = ({ id, cat_name }) => request({ url: `categor
 
 //  删除分类  categories/:id  delete
 export const reqDeleteCategories = (id) => request({ url: `categories/${id}`, method: 'delete' })
+
+// 获取参数列表  categories/:id/attributes  get  sel通过 only 或 many 来获取分类静态参数还是动态参数
+export const reqParamsOrAttrList = ({ id, sel }) => request({ url: `categories/${id}/attributes`, method: 'get', params: { sel } })
+
+// 添加动态参数或者静态属性  categories/:id/attributes post
+export const reqAddParamsOrAttr = ({ id, attr_name, attr_sel, attr_vals }) => request({ url: `categories/${id}/attributes`, method: 'post', data: { attr_name, attr_sel, attr_vals } })
+
+// 编辑提交参数 categories/:id/attributes/:attrId  put
+export const reqUpdateParamsOrAttr = ({ id, attrId, attr_name, attr_sel, attr_vals }) => request({ url: `categories/${id}/attributes/${attrId}`, method: 'put', data: { attr_name, attr_sel, attr_vals } })
+
+// 删除参数  categories/:id/attributes/:attrid  delete
+export const reqDeleteParamsOrAttr = ({ id, attrid }) => request({ url: `categories/${id}/attributes/${attrid}`, method: 'delete' })
