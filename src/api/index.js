@@ -69,3 +69,12 @@ export const reqUpdateParamsOrAttr = ({ id, attrId, attr_name, attr_sel, attr_va
 
 // 删除参数  categories/:id/attributes/:attrid  delete
 export const reqDeleteParamsOrAttr = ({ id, attrid }) => request({ url: `categories/${id}/attributes/${attrid}`, method: 'delete' })
+
+//  商品列表数据  goods  get
+export const reqGoods = ({ query, pagenum, pagesize }) => request({ url: 'goods', method: 'get', params: { query, pagenum, pagesize } })
+
+// 删除商品  goods/:id  delete
+export const reqDeleteGood = (id) => request({ url: `goods/${id}`, method: 'delete' })
+
+//   添加商品  goods  post
+export const reqAddGoods = (data) => request({ url: 'goods', method: 'post', data })

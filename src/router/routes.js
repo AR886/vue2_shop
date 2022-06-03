@@ -34,7 +34,11 @@ const routes = [
       // 商品分类
       { path: 'categories', component: () => import('@/views/goods/categories') },
       // 参数分类
-      { path: 'params', component: () => import('@/views/goods/params') }
+      { path: 'params', component: () => import('@/views/goods/params') },
+      // 商品列表
+      { path: 'goods', component: () => import('@/views/goods/list') },
+      // 添加商品
+      { path: 'add', component: () => import('@/views/goods/addGood') }
     ]
   }
 ]

@@ -12,6 +12,15 @@ import Crumbs from '@/components/crumbs.vue'
 // 引入阿里图标库
 import '@/assets/iconfont/iconfont.css'
 
+// 导入富文本编辑器
+import VueQuillEditor from 'vue-quill-editor'
+// 导入富文本编辑器样式
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+// 注册富文本编辑器
+Vue.use(VueQuillEditor)
+
 Vue.component(Crumbs.name, Crumbs)
 Vue.config.productionTip = false
 

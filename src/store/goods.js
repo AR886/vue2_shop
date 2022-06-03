@@ -1,10 +1,14 @@
-import { reqCategoriesList, reqAddCategories, reqUpdateCategories, reqDeleteCategories, reqParamsOrAttrList, reqAddParamsOrAttr, reqUpdateParamsOrAttr, reqDeleteParamsOrAttr } from '@/api'
+import { reqCategoriesList, reqAddCategories, reqUpdateCategories, reqDeleteCategories, reqParamsOrAttrList, reqAddParamsOrAttr, reqUpdateParamsOrAttr, reqDeleteParamsOrAttr, reqGoods, reqDeleteGood, reqAddGoods } from '@/api'
+
+// 引入时间插件
+import dayjs from 'dayjs'
 const state = {
   categoriesList: [],
   twoCategoriesList: [],
   allCategoriesList: [],
   paramsList: [],
-  attrList: []
+  attrList: [],
+  goodsListInfo: {}
 }
 const mutations = {
   GETCATEGORIESLIST(state, categoriesList) {
@@ -21,6 +25,9 @@ const mutations = {
   },
   GETATTRLIST(state, attrList) {
     state.attrList = attrList
+  },
+  GETGOODSLIST(state, goodsListInfo) {
+    state.goodsListInfo = goodsListInfo
   }
 }
 const actions = {
@@ -67,7 +74,7 @@ const actions = {
       commit('GETALLCATEGORIESLIST', res.data)
     }
   },
-  // 获取动态参数列表
+  // 获取动态参数列表(切割attr_vals成数组)
   async getParamsList({ commit }, data) {
     const { data: res } = await reqParamsOrAttrList(data)
     if (res.meta.status === 200) {
@@ -82,7 +89,7 @@ const actions = {
       commit('GETPARAMSLIST', res.data)
     }
   },
-  // 获取静态参数列表
+  // 获取静态参数列表(切割attr_vals成数组)
   async gerAttrList({ commit }, data) {
     const { data: res } = await reqParamsOrAttrList(data)
     if (res.meta.status === 200) {
@@ -92,6 +99,13 @@ const actions = {
         item.inputVisible = false
         item.tagInputValue = ''
       })
+      commit('GETATTRLIST', res.data)
+    }
+  },
+  // 获取初始的静态参数列表
+  async getAttrLists({ commit }, data) {
+    const { data: res } = await reqParamsOrAttrList(data)
+    if (res.meta.status === 200) {
       commit('GETATTRLIST', res.data)
     }
   },
@@ -115,10 +129,38 @@ const actions = {
     if (res.meta.status === 200) {
       return 'ok'
     }
+  },
+  // 获取商品列表数据
+  async getGoodsList({ commit }, data) {
+    // console.log(data)
+    const { data: res } = await reqGoods(data)
+    if (res.meta.status === 200) {
+      res.data.goods.forEach((item) => {
+        item.add_time = dayjs(item.add_time).format('YYYY-MM-DD HH:mm:ss')
+      })
+      commit('GETGOODSLIST', res.data)
+    }
+  },
+  // 删除商品
+  async deleteGood({ commit }, id) {
+    const { data: res } = await reqDeleteGood(id)
+    if (res.meta.status === 200) {
+      return 'ok'
+    }
+  },
+  // 添加商品
+  async addGood({ commit }, info) {
+    const { data: res } = await reqAddGoods(info)
+    if (res.meta.status === 201) {
+      return 'ok'
+    }
   }
 }
 
-const getters = {}
+const getters = {
+  total: (state) => state.goodsListInfo.total,
+  goodsList: (state) => state.goodsListInfo.goods
+}
 export default {
   state,
   mutations,
