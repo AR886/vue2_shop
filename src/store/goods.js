@@ -1,4 +1,4 @@
-import { reqCategoriesList, reqAddCategories, reqUpdateCategories, reqDeleteCategories, reqParamsOrAttrList, reqAddParamsOrAttr, reqUpdateParamsOrAttr, reqDeleteParamsOrAttr, reqGoods, reqDeleteGood, reqAddGoods } from '@/api'
+import { reqCategoriesList, reqAddCategories, reqUpdateCategories, reqDeleteCategories, reqParamsOrAttrList, reqAddParamsOrAttr, reqUpdateParamsOrAttr, reqDeleteParamsOrAttr, reqGoods, reqDeleteGood, reqAddGoods, reqUpdateGood } from '@/api'
 
 // 引入时间插件
 import dayjs from 'dayjs'
@@ -151,6 +151,14 @@ const actions = {
   // 添加商品
   async addGood({ commit }, info) {
     const { data: res } = await reqAddGoods(info)
+    if (res.meta.status === 201) {
+      return 'ok'
+    }
+  },
+  // 编辑提交商品
+  async updateGood({ commit }, goodInfo) {
+    const { data: res } = await reqUpdateGood(goodInfo)
+    console.log(res)
     if (res.meta.status === 201) {
       return 'ok'
     }

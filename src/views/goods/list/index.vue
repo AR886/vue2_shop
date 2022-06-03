@@ -26,7 +26,7 @@
         <el-table-column label="创建时间" width="170" prop="add_time"> </el-table-column>
         <el-table-column label="操作" width="130">
           <template slot-scope="{ row }">
-            <el-button type="primary" size="small" icon="el-icon-edit"></el-button>
+            <el-button type="primary" size="small" icon="el-icon-edit" @click="openUpdateDialog(row)"></el-button>
             <el-button type="danger" size="small" icon="el-icon-delete" @click="deleteGood(row)"></el-button>
           </template>
         </el-table-column>
@@ -35,6 +35,30 @@
       <!-- 分页器    -->
       <el-pagination :current-page="queryInfo.pagenum" :page-sizes="[5, 7, 10]" :page-size="queryInfo.pagesize" layout="prev, pager, next, jumper,->,total,sizes" :total="total" style="text-align: center" @current-change="handleCurrentChange" @size-change="handleSizeChange"> </el-pagination>
     </el-card>
+
+    <!-- 编辑商品对话框 -->
+    <el-dialog title="编辑提交商品" :visible.sync="updateDialogVisible" width="50%" @close="updateDialogClose">
+      <!-- 编辑商品信息表单 -->
+      <el-form :model="updateGoodInfo" ref="updateFormRef" :rules="rules" label-width="80px">
+        <el-form-item label="商品名称" size="normal" prop="goods_name">
+          <el-input v-model="updateGoodInfo.goods_name" size="normal"></el-input>
+        </el-form-item>
+        <el-form-item label="价格 (元)" size="normal" prop="goods_price">
+          <el-input v-model="updateGoodInfo.goods_price" size="normal" type="number"></el-input>
+        </el-form-item>
+        <el-form-item label="重量" size="normal" prop="goods_weight">
+          <el-input v-model="updateGoodInfo.goods_weight" size="normal" type="number"></el-input>
+        </el-form-item>
+        <el-form-item label="数量" size="normal" prop="goods_number">
+          <el-input v-model="updateGoodInfo.goods_number" size="normal" type="number"></el-input>
+        </el-form-item>
+      </el-form>
+
+      <span slot="footer">
+        <el-button @click="updateDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="updateGood">确定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -43,6 +67,18 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'list',
   data() {
+    var goods_number = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('商品数量不能为空'))
+      }
+      setTimeout(() => {
+        if (Number(value) > 0 && Number(value) < 999) {
+          callback()
+        } else {
+          callback(new Error('请输入 1 - 999 之间'))
+        }
+      }, 1000)
+    }
     return {
       queryInfo: {
         // 搜索文本框的value
@@ -50,6 +86,23 @@ export default {
         // 分页
         pagenum: 1,
         pagesize: 10
+      },
+      // 显示隐藏编辑商品对话框
+      updateDialogVisible: false,
+      // 收集编辑商品数据
+      updateGoodInfo: {
+        goods_name: '',
+        goods_number: 0,
+        goods_price: 0,
+        goods_weight: 0,
+        goods_id: 0
+      },
+      // 验证规则
+      rules: {
+        goods_name: [{ required: true, message: '请输入商品名称', trigger: 'blur' }],
+        goods_number: [{ required: true, validator: goods_number, trigger: 'blur' }],
+        goods_price: [{ required: true, message: '请输入商品价格', trigger: 'blur' }],
+        goods_weight: [{ required: true, message: '请输入商品重量', trigger: 'blur' }]
       }
     }
   },
@@ -93,6 +146,30 @@ export default {
       if (delResult === 'cancel') {
         return this.$message.info('取消删除')
       }
+    },
+    // 编辑对话框 关闭回调
+    updateDialogClose() {
+      this.updateGoodInfo = {}
+      this.$refs.updateFormRef.resetFields()
+    },
+    // 打开编辑对话框
+    openUpdateDialog(row) {
+      this.updateDialogVisible = true
+      this.updateGoodInfo = { ...row }
+    },
+    // 编辑提交商品
+    updateGood() {
+      this.$refs.updateFormRef.validate((valid) => {
+        if (valid) {
+          // 整理ID
+          this.updateGoodInfo.id = this.updateGoodInfo.goods_id
+          const result = this.$store.dispatch('updateGood', this.updateGoodInfo)
+          if (result === 'ok') {
+            this.$message.success('编辑用户成功')
+            this.getGoodsList()
+          }
+        }
+      })
     }
   },
   computed: {

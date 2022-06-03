@@ -78,3 +78,6 @@ export const reqDeleteGood = (id) => request({ url: `goods/${id}`, method: 'dele
 
 //   添加商品  goods  post
 export const reqAddGoods = (data) => request({ url: 'goods', method: 'post', data })
+
+// 编辑提交商品  goods/:id  put
+export const reqUpdateGood = (data) => request({ url: `goods/${data.id}`, method: 'put', data })
