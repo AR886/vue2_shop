@@ -49,6 +49,15 @@ const routes = [
       // 订单列表
       { path: 'orders', component: () => import('@/views/order/orderList') }
     ]
+  },
+  // 数据统计模块
+  {
+    path: '/reports',
+    component: () => import('@/views/home'),
+    children: [
+      // 数据报表
+      { path: 'reports', component: () => import('@/views/reports/reports') }
+    ]
   }
 ]
 

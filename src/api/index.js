@@ -84,3 +84,6 @@ export const reqUpdateGood = (data) => request({ url: `goods/${data.id}`, method
 
 //  订单数据列表  orders  get
 export const reqOrderList = (data) => request({ url: 'orders', method: 'get', params: data })
+
+// ### 基于时间统计的折线图  reports/type/1  get
+export const reqTimeLineCharts = () => request({ url: 'reports/type/1', method: 'get' })
