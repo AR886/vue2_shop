@@ -81,3 +81,6 @@ export const reqAddGoods = (data) => request({ url: 'goods', method: 'post', dat
 
 // 编辑提交商品  goods/:id  put
 export const reqUpdateGood = (data) => request({ url: `goods/${data.id}`, method: 'put', data })
+
+//  订单数据列表  orders  get
+export const reqOrderList = (data) => request({ url: 'orders', method: 'get', params: data })

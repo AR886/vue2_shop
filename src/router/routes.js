@@ -40,6 +40,15 @@ const routes = [
       // 添加商品
       { path: 'add', component: () => import('@/views/goods/addGood') }
     ]
+  },
+  // 订单管理模块
+  {
+    path: '/orders',
+    component: () => import('@/views/home'),
+    children: [
+      // 订单列表
+      { path: 'orders', component: () => import('@/views/order/orderList') }
+    ]
   }
 ]
 

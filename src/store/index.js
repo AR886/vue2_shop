@@ -5,6 +5,7 @@ import Login from './login'
 import Home from './home'
 import Roles from './roles'
 import Goods from './goods'
+import Orders from './order'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -12,6 +13,7 @@ export default new Vuex.Store({
     Login,
     Home,
     Roles,
-    Goods
+    Goods,
+    Orders
   }
 })
